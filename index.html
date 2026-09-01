@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minna no Nihongo - Belajar & Kuis</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="app-container">
+    <!-- Header -->
+    <header>
+      <h1>Minna no Nihongo</h1>
+      <p>Aplikasi Belajar & Kuis Kosakata N5</p>
+    </header>
+
+    <!-- Menu Utama -->
+    <section id="menu-screen" class="screen active">
+      <!-- Tab Mode -->
+      <div class="mode-tabs">
+        <button id="tab-study" class="btn-tab active" onclick="switchMode('study')">📖 Belajar</button>
+        <button id="tab-quiz" class="btn-tab" onclick="switchMode('quiz')">📝 Kuis</button>
+      </div>
+
+      <h2 id="menu-title">Pilih Bab Belajar</h2>
+      <div id="chapter-grid" class="chapter-grid">
+        <!-- Generasi Tombol Bab via JS -->
+      </div>
+    </section>
+
+    <!-- Halaman Belajar (Daftar Kosakata) -->
+    <section id="study-screen" class="screen">
+      <div class="quiz-header">
+        <button class="btn-back" onclick="showMenu()">← Menu</button>
+        <span id="study-chapter-title">Bab 1</span>
+        <span id="study-count-text">0 Kata</span>
+      </div>
+
+      <div id="vocab-list" class="vocab-list">
+        <!-- List Kosakata via JS -->
+      </div>
+    </section>
+
+    <!-- Halaman Kuis -->
+    <section id="quiz-screen" class="screen">
+      <div class="quiz-header">
+        <button class="btn-back" onclick="showMenu()">← Menu</button>
+        <span id="chapter-title">Bab 1</span>
+        <span id="progress-text">Soal 1 / 44</span>
+      </div>
+
+      <div class="card">
+        <p class="question-label">Apa arti dari kata berikut?</p>
+        <h2 id="question-text">わたし</h2>
+        <p id="sub-question" class="sub-text">(watashi)</p>
+      </div>
+
+      <div id="options-container" class="options-grid"></div>
+      <div id="feedback" class="feedback-msg"></div>
+
+      <button id="btn-next" class="btn-secondary hidden" onclick="nextQuestion()">Soal Berikutnya</button>
+    </section>
+
+    <!-- Halaman Hasil Kuis -->
+    <section id="result-screen" class="screen">
+      <h2>Selesai!</h2>
+      <div class="score-card">
+        <p>Skor Akhir Kamu:</p>
+        <h1 id="final-score">0 / 0</h1>
+      </div>
+      <button class="btn-primary" onclick="showMenu()">Kembali ke Menu</button>
+    </section>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,314 @@
+:root {
+  --primary-color: #4f46e5;
+  --primary-hover: #4338ca;
+  --bg-color: #f3f4f6;
+  --card-bg: #ffffff;
+  --text-color: #1f2937;
+  --text-muted: #6b7280;
+  --correct-color: #10b981;
+  --wrong-color: #ef4444;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.app-container {
+  background-color: var(--card-bg);
+  width: 100%;
+  max-width: 480px;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  padding: 24px;
+  text-align: center;
+}
+
+header h1 {
+  font-size: 1.5rem;
+  color: var(--primary-color);
+}
+
+header p {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin-bottom: 20px;
+}
+
+/* Tab Mode */
+.mode-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+  background-color: #f3f4f6;
+  padding: 4px;
+  border-radius: 10px;
+}
+
+.btn-tab {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  background: transparent;
+  font-weight: 600;
+  color: var(--text-muted);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-tab.active {
+  background-color: #ffffff;
+  color: var(--primary-color);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Management Screen */
+.screen {
+  display: none;
+}
+
+.screen.active {
+  display: block;
+}
+
+/* Chapter Menu */
+.chapter-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.btn-chapter {
+  padding: 14px;
+  font-size: 1rem;
+  font-weight: 600;
+  border: 2px solid var(--primary-color);
+  background-color: transparent;
+  color: var(--primary-color);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-chapter:hover:not(.disabled) {
+  background-color: var(--primary-color);
+  color: #fff;
+}
+
+.btn-chapter.disabled {
+  border-color: #d1d5db;
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+/* Header di dalam Quiz & Belajar */
+.quiz-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+
+.btn-back {
+  background: none;
+  border: none;
+  color: var(--primary-color);
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+}
+
+.btn-back:hover {
+  background-color: #e0e7ff;
+}
+
+/* Style Tampilan Belajar Kosakata */
+.vocab-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 400px;
+  overflow-y: auto;
+  padding-right: 4px;
+  text-align: left;
+}
+
+.vocab-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+}
+
+.vocab-jp {
+  display: flex;
+  flex-direction: column;
+}
+
+.vocab-kanji {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--text-color);
+}
+
+.vocab-sub {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.vocab-meaning {
+  font-weight: 600;
+  color: var(--primary-color);
+  text-align: right;
+  max-width: 50%;
+}
+
+/* Quiz UI */
+.card {
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 20px 16px;
+  margin-bottom: 20px;
+}
+
+.question-label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+#question-text {
+  font-size: 2.2rem;
+  color: var(--text-color);
+  margin-bottom: 4px;
+}
+
+.sub-text {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+/* Options Multiple Choice */
+.options-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.btn-option {
+  width: 100%;
+  padding: 14px 16px;
+  background-color: #ffffff;
+  border: 2px solid #e5e7eb;
+  color: var(--text-color);
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: 10px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s ease;
+}
+
+.btn-option:hover:not(:disabled) {
+  border-color: var(--primary-color);
+  background-color: #f0fdf4;
+}
+
+.btn-option:disabled {
+  cursor: default;
+}
+
+.btn-option.correct-choice {
+  background-color: #d1fae5 !important;
+  border-color: var(--correct-color) !important;
+  color: #065f46;
+}
+
+.btn-option.wrong-choice {
+  background-color: #fee2e2 !important;
+  border-color: var(--wrong-color) !important;
+  color: #991b1b;
+}
+
+/* Buttons & Feedback */
+button.btn-primary, button.btn-secondary {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-hover);
+}
+
+.btn-secondary {
+  background-color: #4b5563;
+  color: white;
+  width: 100%;
+}
+
+.btn-secondary:hover {
+  background-color: #374151;
+}
+
+.feedback-msg {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+  min-height: 24px;
+}
+
+.feedback-msg.correct {
+  color: var(--correct-color);
+}
+
+.feedback-msg.wrong {
+  color: var(--wrong-color);
+}
+
+.score-card {
+  margin: 24px 0;
+}
+
+.score-card h1 {
+  font-size: 3rem;
+  color: var(--primary-color);
+  margin-top: 8px;
+}
+
+.hidden {
+  display: none;
+}
