@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Minna no Nihongo - Belajar & Kuis</title>
+  <title>Minna no Nihongo - Belajar, Flashcard & Kuis</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -12,15 +12,22 @@
     <!-- Header -->
     <header>
       <h1>Minna no Nihongo</h1>
-      <p>Aplikasi Belajar & Kuis Kosakata N5</p>
+      <p>Aplikasi Belajar Kosakata N5</p>
     </header>
 
     <!-- Menu Utama -->
     <section id="menu-screen" class="screen active">
-      <!-- Tab Mode -->
+      <!-- Tab Mode Utama -->
       <div class="mode-tabs">
         <button id="tab-study" class="btn-tab active" onclick="switchMode('study')">📖 Belajar</button>
+        <button id="tab-flashcard" class="btn-tab" onclick="switchMode('flashcard')">🎴 Flashcard</button>
         <button id="tab-quiz" class="btn-tab" onclick="switchMode('quiz')">📝 Kuis</button>
+      </div>
+
+      <!-- Sub-Tab Mode Kuis -->
+      <div id="quiz-type-tabs" class="sub-mode-tabs hidden">
+        <button id="quiz-type-jp-id" class="btn-sub-tab active" onclick="switchQuizType('jp-id')">Jepang ➔ Indonesia (Pilihan)</button>
+        <button id="quiz-type-id-jp" class="btn-sub-tab" onclick="switchQuizType('id-jp')">Indonesia ➔ Jepang (Ketik)</button>
       </div>
 
       <h2 id="menu-title">Pilih Bab Belajar</h2>
@@ -42,6 +49,35 @@
       </div>
     </section>
 
+    <!-- Halaman Flashcard -->
+    <section id="flashcard-screen" class="screen">
+      <div class="quiz-header">
+        <button class="btn-back" onclick="showMenu()">← Menu</button>
+        <span id="fc-chapter-title">Bab 1</span>
+        <span id="fc-progress-text">1 / 44</span>
+      </div>
+
+      <div class="flashcard-wrapper" onclick="flipCard()">
+        <div id="flashcard" class="flashcard">
+          <div class="card-face card-front">
+            <span class="fc-hint">Klik/Ketuk untuk balik</span>
+            <h2 id="fc-kanji">わたし</h2>
+            <p id="fc-sub">(watashi)</p>
+          </div>
+          <div class="card-face card-back">
+            <span class="fc-hint">Arti Bahasa Indonesia</span>
+            <h2 id="fc-meaning">saya</h2>
+          </div>
+        </div>
+      </div>
+
+      <div class="flashcard-controls">
+        <button class="btn-fc-nav" onclick="prevCard()">←</button>
+        <button class="btn-fc-nav" onclick="shuffleFlashcards()">🔀 Acak</button>
+        <button class="btn-fc-nav" onclick="nextCard()">→</button>
+      </div>
+    </section>
+
     <!-- Halaman Kuis -->
     <section id="quiz-screen" class="screen">
       <div class="quiz-header">
@@ -51,12 +87,20 @@
       </div>
 
       <div class="card">
-        <p class="question-label">Apa arti dari kata berikut?</p>
+        <p id="question-label" class="question-label">Apa arti dari kata berikut?</p>
         <h2 id="question-text">わたし</h2>
         <p id="sub-question" class="sub-text">(watashi)</p>
       </div>
 
+      <!-- Pilihan Ganda -->
       <div id="options-container" class="options-grid"></div>
+
+      <!-- Input Mengetik -->
+      <div id="input-container" class="input-container hidden">
+        <input type="text" id="user-input" placeholder="Ketik Hiragana/Romaji..." autocomplete="off" onkeydown="handleKeyPress(event)">
+        <button class="btn-primary" onclick="checkTypedAnswer()">Kirim</button>
+      </div>
+
       <div id="feedback" class="feedback-msg"></div>
 
       <button id="btn-next" class="btn-secondary hidden" onclick="nextQuestion()">Soal Berikutnya</button>
