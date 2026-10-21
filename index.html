@@ -24,6 +24,29 @@
         <button id="tab-quiz" class="btn-tab" onclick="switchMode('quiz')">📝 Kuis</button>
       </div>
 
+      <!-- Sub-Tab Mode Flashcard (Fitur Rentang Bab & Opsi Tampilan Kartu) -->
+      <div id="flashcard-range-box" class="sub-mode-tabs hidden" style="flex-direction: column; gap: 12px; background: #f9fafb; padding: 14px; border-radius: 10px; border: 1px solid #e5e7eb; margin-bottom: 15px;">
+        <!-- Pilihan Sisi Depan Kartu -->
+        <div style="display: flex; gap: 8px; align-items: center; justify-content: center; font-size: 0.85rem;">
+          <span style="font-weight: 600; color: #4b5563;">Sisi Depan Kartu:</span>
+          <select id="fc-front-side" style="padding: 6px; border-radius: 6px; border: 1px solid #ccc; font-weight: 600;" onchange="changeFlashcardFrontSide(this.value)">
+            <option value="jp">Jepang (Kanji/Hiragana)</option>
+            <option value="id">Arti (Indonesia)</option>
+          </select>
+        </div>
+
+        <!-- Rentang Bab -->
+        <div style="display: flex; flex-direction: column; gap: 8px; align-items: center; border-top: 1px dashed #d1d5db; padding-top: 10px;">
+          <span style="font-size: 0.85rem; font-weight: 600; color: #4b5563;">Atau Belajar Gabungan Bab:</span>
+          <div style="display: flex; gap: 8px; align-items: center; justify-content: center;">
+            <select id="fc-start-chapter" style="padding: 6px; border-radius: 6px; border: 1px solid #ccc; font-weight: 600;"></select>
+            <span>s/d</span>
+            <select id="fc-end-chapter" style="padding: 6px; border-radius: 6px; border: 1px solid #ccc; font-weight: 600;"></select>
+            <button class="btn-primary" style="padding: 6px 12px; font-size: 0.85rem;" onclick="startRangeFlashcard()">Mulai Range</button>
+          </div>
+        </div>
+      </div>
+
       <!-- Sub-Tab Mode Kuis -->
       <div id="quiz-type-tabs" class="sub-mode-tabs hidden">
         <button id="quiz-type-jp-id" class="btn-sub-tab active" onclick="switchQuizType('jp-id')">Jepang ➔ Indonesia (Pilihan)</button>
@@ -61,12 +84,13 @@
         <div id="flashcard" class="flashcard">
           <div class="card-face card-front">
             <span class="fc-hint">Klik/Ketuk untuk balik</span>
-            <h2 id="fc-kanji">わたし</h2>
-            <p id="fc-sub">(watashi)</p>
+            <h2 id="fc-front-main">わたし</h2>
+            <p id="fc-front-sub">(watashi)</p>
           </div>
           <div class="card-face card-back">
-            <span class="fc-hint">Arti Bahasa Indonesia</span>
-            <h2 id="fc-meaning">saya</h2>
+            <span class="fc-hint">Sisi Belakang</span>
+            <h2 id="fc-back-main">saya</h2>
+            <p id="fc-back-sub"></p>
           </div>
         </div>
       </div>
