@@ -404,7 +404,7 @@ const chapterData = {
     { word: "どれ", hiragana: "どれ", romaji: "dore", answer: "yang mana" },
     { word: "とても", hiragana: "とても", romaji: "totemo", answer: "sangat" },
     { word: "あまり", hiragana: "あまり", romaji: "amari", answer: "tidak terlalu" },
-    { word: "画面", hiragana: "そして", romaji: "soshite", answer: "dan / kemudian" },
+    { word: "そして", hiragana: "そして", romaji: "soshite", answer: "dan / kemudian" },
     { word: "～が、～", hiragana: "～が、～", romaji: "~ga, ~", answer: "tetapi / namun" },
     { word: "お元気ですか", hiragana: "おげんきですか", romaji: "ogenki desu ka", answer: "apa kabar?" },
     { word: "そうですね", hiragana: "そうですね", romaji: "sou desu ne", answer: "ya, benar" },
@@ -526,14 +526,49 @@ const chapterData = {
 
 let currentMode = 'study'; 
 let currentQuizType = 'jp-id';
+let flashcardFrontSide = 'jp'; // 'jp' = Bahasa Jepang dulu, 'id' = Arti Bahasa Indonesia dulu
 let currentData = [];
 let currentIndex = 0;
 let score = 0;
 
 // INISIALISASI SAAT HALAMAN SELESAI DIMUAT
 document.addEventListener("DOMContentLoaded", function() {
+  populateRangeSelects();
   renderMenu();
 });
+
+// Mengisi pilihan dropdown bab untuk Flashcard Range
+function populateRangeSelects() {
+  const startSelect = document.getElementById('fc-start-chapter');
+  const endSelect = document.getElementById('fc-end-chapter');
+  if (!startSelect || !endSelect) return;
+
+  startSelect.innerHTML = '';
+  endSelect.innerHTML = '';
+
+  const activeChapters = Object.keys(chapterData).map(Number).sort((a, b) => a - b);
+  activeChapters.forEach(ch => {
+    const opt1 = document.createElement('option');
+    opt1.value = ch;
+    opt1.innerText = `Bab ${ch}`;
+    startSelect.appendChild(opt1);
+
+    const opt2 = document.createElement('option');
+    opt2.value = ch;
+    opt2.innerText = `Bab ${ch}`;
+    endSelect.appendChild(opt2);
+  });
+
+  if (activeChapters.length > 0) {
+    startSelect.value = activeChapters[0];
+    endSelect.value = activeChapters[activeChapters.length - 1];
+  }
+}
+
+// Mengubah Sisi Depan Flashcard (Jepang / Indonesia)
+function changeFlashcardFrontSide(val) {
+  flashcardFrontSide = val;
+}
 
 // Ganti Mode (Belajar / Flashcard / Kuis)
 function switchMode(mode) {
@@ -542,15 +577,20 @@ function switchMode(mode) {
   document.getElementById('tab-flashcard').classList.toggle('active', mode === 'flashcard');
   document.getElementById('tab-quiz').classList.toggle('active', mode === 'quiz');
 
-  const subTabs = document.getElementById('quiz-type-tabs');
+  const quizSubTabs = document.getElementById('quiz-type-tabs');
+  const fcRangeBox = document.getElementById('flashcard-range-box');
+
   if (mode === 'quiz') {
-    subTabs.classList.remove('hidden');
+    quizSubTabs.classList.remove('hidden');
+    fcRangeBox.classList.add('hidden');
     document.getElementById('menu-title').innerText = 'Pilih Bab Kuis';
   } else if (mode === 'flashcard') {
-    subTabs.classList.add('hidden');
+    quizSubTabs.classList.add('hidden');
+    fcRangeBox.classList.remove('hidden');
     document.getElementById('menu-title').innerText = 'Pilih Bab Flashcard';
   } else {
-    subTabs.classList.add('hidden');
+    quizSubTabs.classList.add('hidden');
+    fcRangeBox.classList.add('hidden');
     document.getElementById('menu-title').innerText = 'Pilih Bab Belajar';
   }
 
@@ -619,7 +659,7 @@ function openStudy(chapter) {
   switchScreen('study-screen');
 }
 
-// Mode Flashcard
+// Mode Flashcard Satu Bab
 function startFlashcard(chapter) {
   if (!chapterData[chapter]) return;
 
@@ -631,6 +671,31 @@ function startFlashcard(chapter) {
   renderFlashcard();
 }
 
+// Mode Flashcard Rentang Bab (Range)
+function startRangeFlashcard() {
+  const startCh = parseInt(document.getElementById('fc-start-chapter').value);
+  const endCh = parseInt(document.getElementById('fc-end-chapter').value);
+
+  let minCh = Math.min(startCh, endCh);
+  let maxCh = Math.max(startCh, endCh);
+
+  let combinedData = [];
+  for (let i = minCh; i <= maxCh; i++) {
+    if (chapterData[i]) {
+      combinedData = combinedData.concat(chapterData[i]);
+    }
+  }
+
+  if (combinedData.length === 0) return;
+
+  currentData = shuffle(combinedData);
+  currentIndex = 0;
+
+  document.getElementById('fc-chapter-title').innerText = `Bab ${minCh} - ${maxCh}`;
+  switchScreen('flashcard-screen');
+  renderFlashcard();
+}
+
 function renderFlashcard() {
   const cardEl = document.getElementById('flashcard');
   cardEl.classList.remove('flipped');
@@ -638,9 +703,25 @@ function renderFlashcard() {
   setTimeout(() => {
     const item = currentData[currentIndex];
     document.getElementById('fc-progress-text').innerText = `${currentIndex + 1} / ${currentData.length}`;
-    document.getElementById('fc-kanji').innerText = item.hiragana;
-    document.getElementById('fc-sub').innerText = item.word !== item.hiragana ? `${item.word} (${item.romaji})` : `(${item.romaji})`;
-    document.getElementById('fc-meaning').innerText = item.answer;
+    
+    const frontMain = document.getElementById('fc-front-main');
+    const frontSub = document.getElementById('fc-front-sub');
+    const backMain = document.getElementById('fc-back-main');
+    const backSub = document.getElementById('fc-back-sub');
+
+    if (flashcardFrontSide === 'jp') {
+      // Depan: Bahasa Jepang, Belakang: Indonesia
+      frontMain.innerText = item.hiragana;
+      frontSub.innerText = item.word !== item.hiragana ? `${item.word} (${item.romaji})` : `(${item.romaji})`;
+      backMain.innerText = item.answer;
+      backSub.innerText = "";
+    } else {
+      // Depan: Indonesia, Belakang: Bahasa Jepang
+      frontMain.innerText = item.answer;
+      frontSub.innerText = "";
+      backMain.innerText = item.hiragana;
+      backSub.innerText = item.word !== item.hiragana ? `${item.word} (${item.romaji})` : `(${item.romaji})`;
+    }
   }, 150);
 }
 
