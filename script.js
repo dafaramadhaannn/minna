@@ -253,6 +253,7 @@ const chapterData = {
     { word: "次の", hiragana: "つぎの", romaji: "tsugi no", answer: "berikutnya / selanjutnya" },
     { word: "どういたしまして", hiragana: "どういたしまして", romaji: "douitashimashite", answer: "sama-sama" },
     { word: "～番線", hiragana: "～ばんせん", romaji: "~bansen", answer: "peron / jalur nomor ~" }
+  
   ],
   6: [
     { word: "食べます", hiragana: "たべます", romaji: "tabemasu", answer: "makan" },
@@ -530,6 +531,7 @@ let flashcardFrontSide = 'jp'; // 'jp' = Bahasa Jepang dulu, 'id' = Arti Bahasa 
 let currentData = [];
 let currentIndex = 0;
 let score = 0;
+let selectedCustomWords = [];
 
 // INISIALISASI SAAT HALAMAN SELESAI DIMUAT
 document.addEventListener("DOMContentLoaded", function() {
@@ -630,6 +632,100 @@ function renderMenu() {
 
     container.appendChild(btn);
   }
+}
+
+// Fitur Pilih Kata Khusus (Custom Word Selector)
+function openWordSelector() {
+  const startCh = parseInt(document.getElementById('fc-start-chapter').value);
+  const endCh = parseInt(document.getElementById('fc-end-chapter').value);
+
+  let minCh = Math.min(startCh, endCh);
+  let maxCh = Math.max(startCh, endCh);
+
+  let availableWords = [];
+  for (let i = minCh; i <= maxCh; i++) {
+    if (chapterData[i]) {
+      availableWords = availableWords.concat(chapterData[i]);
+    }
+  }
+
+  if (availableWords.length === 0) return;
+
+  const selectorList = document.getElementById('word-selector-list');
+  selectorList.innerHTML = '';
+  selectedCustomWords = [...availableWords]; // Default terpilih semua
+
+  availableWords.forEach((item, idx) => {
+    const label = document.createElement('label');
+    label.style.display = 'flex';
+    label.style.alignItems = 'center';
+    label.style.justifyContent = 'space-between';
+    label.style.padding = '10px 14px';
+    label.style.background = '#fff';
+    label.style.border = '1px solid #e5e7eb';
+    label.style.borderRadius = '8px';
+    label.style.cursor = 'pointer';
+
+    label.innerHTML = `
+      <div style="display:flex; flex-direction:column;">
+        <span style="font-weight:bold; color:#1f2937;">${item.hiragana} ${item.word !== item.hiragana ? '(' + item.word + ')' : ''}</span>
+        <span style="font-size:0.85rem; color:#6b7280;">${item.answer}</span>
+      </div>
+      <input type="checkbox" class="word-checkbox" data-index="${idx}" checked style="width: 18px; height: 18px;">
+    `;
+
+    const checkbox = label.querySelector('.word-checkbox');
+    checkbox.addEventListener('change', (e) => {
+      if (e.target.checked) {
+        selectedCustomWords.push(item);
+      } else {
+        selectedCustomWords = selectedCustomWords.filter(w => w.hiragana !== item.hiragana || w.answer !== item.answer);
+      }
+      updateStartCustomBtnCount();
+    });
+
+    selectorList.appendChild(label);
+  });
+
+  updateStartCustomBtnCount();
+  switchScreen('select-words-screen');
+}
+
+function selectAllWords(status) {
+  const checkboxes = document.querySelectorAll('.word-checkbox');
+  checkboxes.forEach(cb => cb.checked = status);
+
+  const startCh = parseInt(document.getElementById('fc-start-chapter').value);
+  const endCh = parseInt(document.getElementById('fc-end-chapter').value);
+  let minCh = Math.min(startCh, endCh);
+  let maxCh = Math.max(startCh, endCh);
+
+  let availableWords = [];
+  for (let i = minCh; i <= maxCh; i++) {
+    if (chapterData[i]) availableWords = availableWords.concat(chapterData[i]);
+  }
+
+  selectedCustomWords = status ? [...availableWords] : [];
+  updateStartCustomBtnCount();
+}
+
+function updateStartCustomBtnCount() {
+  const btn = document.getElementById('btn-start-custom');
+  if (btn) btn.innerText = `Mulai (${selectedCustomWords.length})`;
+}
+
+function startCustomWordsFlashcard() {
+  if (selectedCustomWords.length === 0) {
+    alert('Pilih setidaknya 1 kata!');
+    return;
+  }
+
+  currentData = shuffle(selectedCustomWords);
+  currentIndex = 0;
+
+  document.getElementById('fc-chapter-title').innerText = `Kata Pilihan (${currentData.length})`;
+  switchScreen('flashcard-screen');
+  renderFlashcard();
 }
 
 // Mode Belajar
@@ -749,7 +845,7 @@ function shuffleFlashcards() {
   renderFlashcard();
 }
 
-// Mode Kuis
+// Mode Kuis & Utility
 function shuffle(array) {
   let shuffled = [...array];
   for (let i = shuffled.length - 1; i > 0; i--) {
