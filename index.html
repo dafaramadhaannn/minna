@@ -37,12 +37,13 @@
 
         <!-- Rentang Bab -->
         <div style="display: flex; flex-direction: column; gap: 8px; align-items: center; border-top: 1px dashed #d1d5db; padding-top: 10px;">
-          <span style="font-size: 0.85rem; font-weight: 600; color: #4b5563;">Atau Belajar Gabungan Bab:</span>
-          <div style="display: flex; gap: 8px; align-items: center; justify-content: center;">
+          <span style="font-size: 0.85rem; font-weight: 600; color: #4b5563;">Belajar Gabungan / Pilih Kata:</span>
+          <div style="display: flex; gap: 8px; align-items: center; justify-content: center; flex-wrap: wrap;">
             <select id="fc-start-chapter" style="padding: 6px; border-radius: 6px; border: 1px solid #ccc; font-weight: 600;"></select>
             <span>s/d</span>
             <select id="fc-end-chapter" style="padding: 6px; border-radius: 6px; border: 1px solid #ccc; font-weight: 600;"></select>
             <button class="btn-primary" style="padding: 6px 12px; font-size: 0.85rem;" onclick="startRangeFlashcard()">Mulai Range</button>
+            <button class="btn-secondary" style="padding: 6px 12px; font-size: 0.85rem;" onclick="openWordSelector()">Pilih Kata...</button>
           </div>
         </div>
       </div>
@@ -56,6 +57,22 @@
       <h2 id="menu-title">Pilih Bab Belajar</h2>
       <div id="chapter-grid" class="chapter-grid">
         <!-- Generasi Tombol Bab via JS -->
+      </div>
+    </section>
+
+    <!-- Halaman Pilih Kata Spesifik -->
+    <section id="select-words-screen" class="screen">
+      <div class="quiz-header">
+        <button class="btn-back" onclick="showMenu()">← Menu</button>
+        <span>Pilih Kata Pilihan</span>
+        <button class="btn-primary" style="padding: 4px 10px; font-size: 0.8rem;" onclick="startCustomWordsFlashcard()">Mulai (0)</button>
+      </div>
+      <div style="display: flex; gap: 10px; margin: 10px 0; justify-content: space-between;">
+        <button class="btn-secondary" style="padding: 6px 12px; font-size: 0.8rem;" onclick="selectAllWords(true)">Pilih Semua</button>
+        <button class="btn-secondary" style="padding: 6px 12px; font-size: 0.8rem;" onclick="selectAllWords(false)">Hapus Semua</button>
+      </div>
+      <div id="word-selector-list" class="vocab-list" style="max-height: 60vh; overflow-y: auto;">
+        <!-- Daftar Checkbox Kata via JS -->
       </div>
     </section>
 
